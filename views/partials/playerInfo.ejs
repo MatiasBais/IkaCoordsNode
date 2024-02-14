@@ -1,0 +1,134 @@
+<div class="player-info">
+    <h2>Jugador</h2>
+    <table id="player-table">
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nombre</th>
+            <td class="data-cell"><%= player.nombre %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Alianza</th>
+            <td class="data-cell"><a href="/alianza/<%=player.alianza.server%>/<%=player.alianza.idalianza%>"><%= player.alianza ? player.alianza.nombre : '-' %></a></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Totales</th>
+            <td class="data-cell"><%= player.puntos[0].Totales.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Constructor</th>
+            <td class="data-cell"><%= player.puntos[0].Constructor.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nivel Construccion</th>
+            <td class="data-cell"><%= player.puntos[0].NivelConstruccion.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Investigadores</th>
+            <td class="data-cell"><%= player.puntos[0].Investigadores.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nivel Investigadores</th>
+            <td class="data-cell"><%= player.puntos[0].NivelInvestigadores.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Generales</th>
+            <td class="data-cell"><%= player.puntos[0].Generales.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Oro</th>
+            <td class="data-cell"><%= player.puntos[0].Oro.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Donacion</th>
+            <td class="data-cell"><%= player.puntos[0].Donacion.toLocaleString("en-US") %></td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<div class="ciudad-info">
+    <h2>Ciudades</h2>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Nivel</th>
+            <th>Coordenadas</th>
+            <th>Recurso</th>
+            <th>Mina</th>
+            <th>Aserradero</th>
+            <th>Maravilla</th>
+        </tr>
+        <% player.cities.forEach(ciudad => { %>
+        <tr>
+            <td><%= ciudad.nombre %></td>
+            <td><%= ciudad.nivel %></td>
+            <td><a href="/isla/<%=ciudad.isla.server%>/<%=ciudad.isla.idisla%>"><%= ciudad.isla.x + ":" + ciudad.isla.y %></a></td>
+            <td><%= ciudad.isla.good =="1" ? "Vino":ciudad.isla.good =="2" ? "Mármol" : ciudad.isla.good == "3" ? "Cristal" : "Azufre" %></td>
+            <td><%= ciudad.isla.goodlv %></td>
+            <td><%= ciudad.isla.woodlv %></td>
+            <td><%= ciudad.isla.wonderName + "(" + ciudad.isla.wonderlv + ")" %></td>
+        </tr>
+        <% }); %>
+    </table>
+</div>
+
+
+<script>
+    window.onload = function() {
+        // Get all header cells
+        const headerCells = document.querySelectorAll('.header-cell');
+
+        // Loop through each header cell
+        headerCells.forEach(headerCell => {
+            // Get the column index of the current header cell
+            const columnIndex = headerCell.cellIndex;
+
+            // Get all data cells in the same column
+            const dataCells = document.querySelectorAll(`#player-table td:nth-child(${columnIndex + 1})`);
+
+            // Find the maximum width among all cells in the column
+            let maxWidth = 0;
+            dataCells.forEach(dataCell => {
+                const cellWidth = dataCell.offsetWidth;
+                if (cellWidth > maxWidth) {
+                    maxWidth = cellWidth;
+                }
+            });
+
+            // Set the width of all cells in the column to the maximum width
+            headerCell.style.width = `${maxWidth}px`;
+            dataCells.forEach(dataCell => {
+                dataCell.style.width = `${maxWidth}px`;
+            });
+        });
+    };
+</script>
+
+<div class="points-info">
+    <h2>Puntos</h2>
+    <table>
+        <tr>
+            <th>Totales</th>
+            <th>Constructor</th>
+            <th>Nivel Construcción</th>
+            <th>Investigadores</th>
+            <th>Nivel Investigadores</th>
+            <th>Generales</th>
+            <th>Oro</th>
+            <th>Donacion</th>
+        </tr>
+        <% player.puntos.reverse().forEach(punto => { %>
+        <tr>
+            <td><%= punto.Totales.toLocaleString("en-US") %></td>
+            <td><%= punto.Constructor.toLocaleString("en-US") %></td>
+            <td><%= punto.NivelConstruccion.toLocaleString("en-US") %></td>
+            <td><%= punto.Investigadores.toLocaleString("en-US") %></td>
+            <td><%= punto.NivelInvestigadores.toLocaleString("en-US") %></td>
+            <td><%= punto.Generales.toLocaleString("en-US") %></td>
+            <td><%= punto.Oro.toLocaleString("en-US") %></td>
+            <td><%= punto.Donacion.toLocaleString("en-US") %></td>
+        </tr>
+        <% }); %>
+    </table>
+</div>

@@ -1,0 +1,101 @@
+<!-- filterCitiesForm.ejs -->
+<h1>Buscar Inactivos</h1>
+<form id="cityFilterForm">
+  <label for="allianceName">Alianza:</label>
+  <input type="text" id="allianceName">
+  
+  <label for="xRange">X:</label>
+  <input type="text" id="xRangeStart" placeholder="Mínimo">
+  <input type="text" id="xRangeEnd" placeholder="Máximo">
+
+  <label for="yRange">Y:</label>
+  <input type="text" id="yRangeStart" placeholder="Mínimo">
+  <input type="text" id="yRangeEnd" placeholder="Máximo">
+  
+  <label for="townName">Ciudad:</label>
+  <input type="text" id="townName">
+
+  <button type="button" onclick="filterCities()">Filter Cities</button>
+</form>
+
+<div id="resultContainer"></div>
+
+<script>
+  async function filterCities() {
+    const allianceName = document.getElementById('allianceName').value;
+    
+    // Extract X Range
+    const xRangeStart = document.getElementById('xRangeStart').value;
+    const xRangeEnd = document.getElementById('xRangeEnd').value;
+    
+    // Extract Y Range
+    const yRangeStart = document.getElementById('yRangeStart').value;
+    const yRangeEnd = document.getElementById('yRangeEnd').value;
+    
+    const townName = document.getElementById('townName').value;
+
+    const server = document.getElementById('server').value;
+
+    const apiUrl = '/api/filter-cities-inactives';
+    const queryParams = new URLSearchParams({
+      allianceName: allianceName,
+      xRangeStart: xRangeStart,
+      xRangeEnd: xRangeEnd,
+      yRangeStart: yRangeStart,
+      yRangeEnd: yRangeEnd,
+      townName: townName,
+      server:server
+    });
+
+    const url = `${apiUrl}?${queryParams.toString()}`;
+
+    try {
+      const response = await fetch(url);
+      const cities = await response.json();
+
+      // Display the filtered cities
+      displayCities(cities);
+    } catch (error) {
+      console.error('Error fetching filtered cities:', error);
+    }
+  }
+
+  function displayCities(cities) {
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+
+    if (cities.length === 0) {
+      resultContainer.innerHTML = '<p>No cities found.</p>';
+      return;
+    }
+
+    const table = document.createElement('table');
+table.innerHTML = `
+  <tr>
+    <th>Ciudad</th>
+    <th>Jugador</th>
+    <th>Nivel</th>
+    <th>Maravilla</th>
+    <th>Alianza</th>
+    <th>Coordenadas</th>
+    <th>Puntos</th>
+  </tr>
+`;
+
+cities.forEach(city => {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+  <td>${city.nombre}</td>
+  <td><a href="/player/${city.player.server}/${city.player.idplayer}">${city.player.nombre}</a></td>
+        <td>${city.nivel}</td>
+        <td>${city.isla.wonderName+" ("+city.isla.wonderlv+")"}</td>
+        <td><a href="/alianza/${city.player.alianza.server}/${city.player.alianza.idalianza}">${city.player.alianza ? city.player.alianza.nombre : '-'}</a></td>
+          <td><a href="/isla/${city.isla.server}/${city.isla.idisla}">${city.isla.x+":"+city.isla.y}</a></td>
+        <td>${city.player.puntos ? (city.player.puntos[0].Totales).toLocaleString("en-US") : '-'}</td>
+  `;
+  table.appendChild(row);
+});
+
+    resultContainer.appendChild(table);
+  }
+</script>

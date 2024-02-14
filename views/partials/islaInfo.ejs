@@ -1,0 +1,90 @@
+<div class="isla-info">
+    <h2>Isla</h2>
+    <table id="isla-table">
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Coordenadas</th>
+            <td class="data-cell"><%= isla.x + ":" + isla.y %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Recurso</th>
+            <td class="data-cell"><%= isla.good =="1" ? "Vino":isla.good =="2" ? "Mármol" : isla.good == "3" ? "Cristal" : "Azufre" %> %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nivel Aserradero</th>
+            <td class="data-cell"><%= isla.woodlv %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nivel Mina</th>
+            <td class="data-cell"><%= isla.goodlv %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Maravilla</th>
+            <td class="data-cell"><%= isla.wonderName + " (" + isla.wonderlv + ")" %></td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<div class="ciudad-info">
+    <h2>Ciudades</h2>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Jugador</th>
+            <th>Alianza</th>
+            <th>Nivel</th>
+            <th>Puntos Totales</th>
+        </tr>
+        <% isla.cities.forEach(ciudad => { %>
+        <tr>
+            <td><%= ciudad.nombre %></td>
+            <td><a href="/player/<%=ciudad.player.server %>/<%=ciudad.player.idplayer%>"><%= ciudad.player.nombre %></a></td>
+            <td>
+                <% if (ciudad.player.alianza) { %>
+                    <a href="/alianza/<%= ciudad.player.alianza.server %>/<%= ciudad.player.alianza.idalianza %>">
+                        <%= ciudad.player.alianza.nombre %>
+                    </a>
+                <% } else { %>
+                    -
+                <% } %>
+            </td>
+            <td><%= ciudad.nivel %></td>
+            <td><%= ciudad.player.puntos[0].Totales.toLocaleString("en-US") %></td>
+        </tr>
+        <% }); %>
+    </table>
+</div>
+
+
+<script>
+    window.onload = function() {
+        // Get all header cells
+        const headerCells = document.querySelectorAll('.header-cell');
+
+        // Loop through each header cell
+        headerCells.forEach(headerCell => {
+            // Get the column index of the current header cell
+            const columnIndex = headerCell.cellIndex;
+
+            // Get all data cells in the same column
+            const dataCells = document.querySelectorAll(`#isla-table td:nth-child(${columnIndex + 1})`);
+
+            // Find the maximum width among all cells in the column
+            let maxWidth = 0;
+            dataCells.forEach(dataCell => {
+                const cellWidth = dataCell.offsetWidth;
+                if (cellWidth > maxWidth) {
+                    maxWidth = cellWidth;
+                }
+            });
+
+            // Set the width of all cells in the column to the maximum width
+            headerCell.style.width = `${maxWidth}px`;
+            dataCells.forEach(dataCell => {
+                dataCell.style.width = `${maxWidth}px`;
+            });
+        });
+    };
+</script>

@@ -1,0 +1,111 @@
+<h1>Buscar Islas</h1>
+  <form id="islandFilterForm">
+    <label for="goodlvRange">Nivel Mina:</label>
+    <input type="number" id="goodlvStart" placeholder="Mínimo">
+    <input type="number" id="goodlvEnd" placeholder="Máximo">
+
+    <label for="woodlvRange">Nivel Aserradero:</label>
+    <input type="number" id="woodlvStart" placeholder="Mínimo">
+    <input type="number" id="woodlvEnd" placeholder="Máximo">
+
+    <label for="specificGood">Recurso de Lujo:</label>
+    <select id="specificGood">
+      <option value="">Cualquiera</option>
+      <option value="1">Vino</option>
+      <option value="2">Mármol</option>
+      <option value="3">Cristal</option>
+      <option value="4">Azufre</option>
+      <!-- Add more options as needed -->
+    </select>
+
+    <label for="xRange">X:</label>
+    <input type="number" id="xRangeStart" placeholder="Mínimo">
+    <input type="number" id="xRangeEnd" placeholder="Máximo">
+
+    <label for="yRange">Y:</label>
+    <input type="number" id="yRangeStart" placeholder="Mínimo">
+    <input type="number" id="yRangeEnd" placeholder="Máximo">
+
+    <button type="button" onclick="filterIslands()">Buscar Islas</button>
+  </form>
+
+  <!-- Results will be displayed here -->
+  <div id="resultContainer"></div>
+
+  <script>
+    async function filterIslands() {
+        const goodlvStart = document.getElementById('goodlvStart').value;
+        const goodlvEnd = document.getElementById('goodlvEnd').value;
+        const woodlvStart = document.getElementById('woodlvStart').value;
+        const woodlvEnd = document.getElementById('woodlvEnd').value;
+      const specificGood = document.getElementById('specificGood').value;
+      const xRangeStart = document.getElementById('xRangeStart').value;
+      const xRangeEnd = document.getElementById('xRangeEnd').value;
+      const yRangeStart = document.getElementById('yRangeStart').value;
+      const yRangeEnd = document.getElementById('yRangeEnd').value;
+      const server = document.getElementById('server').value;
+
+      const apiUrl = 'http://localhost:3000/api/filter-islands'; // Update with your API endpoint
+      const queryParams = new URLSearchParams({
+        goodlvStart: goodlvStart,
+  goodlvEnd: goodlvEnd,
+  woodlvStart: woodlvStart,
+  woodlvEnd: woodlvEnd,
+        specificGood: specificGood,
+        xRangeStart: xRangeStart,
+        xRangeEnd: xRangeEnd,
+        yRangeStart: yRangeStart,
+        yRangeEnd: yRangeEnd,
+        server:server
+      });
+
+      const url = `${apiUrl}?${queryParams.toString()}`;
+
+      try {
+        const response = await fetch(url);
+        const islands = await response.json();
+
+        // Display the filtered islands
+        displayIslands(islands);
+      } catch (error) {
+        console.error('Error fetching filtered islands:', error);
+      }
+    }
+
+    function displayIslands(islands) {
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.innerHTML = '';
+
+    if (islands.length === 0) {
+        resultContainer.innerHTML = '<p>No islands found.</p>';
+        return;
+    }
+
+    const table = document.createElement('table');
+    table.innerHTML = `
+        <tr>
+            <th>Mina</th>
+            <th>Aserradero</th>
+            <th>Recurso</th>
+            <th>Coordenadas</th>
+            <th>Maravilla</th>
+        </tr>
+    `;
+
+    islands.forEach(island => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${island.goodlv}</td>
+            <td>${island.woodlv}</td>
+            <td>${island.good === "1" ? "Vino" : island.good === "2" ? "Mármol" : island.good === "3" ? "Cristal" : "Azufre"}</td>
+            <td><a href="/isla/${island.server}/${island.idisla}">${island.x+":"+island.y}</a></td>
+            <td>${island.wonderName} (${island.wonderlv})</td>
+        `;
+        table.appendChild(row);
+    });
+
+    resultContainer.appendChild(table);
+}
+  </script>
+</body>
+</html>

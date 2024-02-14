@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Page Title</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5; /* Light gray background color */
+    }
+
+    header {
+      background-color: #333; /* Dark gray header background color */
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+
+    #main-container {
+      display: flex;
+    }
+
+    #top-bar {
+      width: 100%;
+      background-color: #444; /* Darker gray top bar background color */
+      padding: 10px;
+      text-align: center;
+    }
+
+    #top-bar a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      background-color: #555; /* Dark gray for links */
+    }
+
+    #side-bar {
+      width: 25%;
+      background-color: #f5f5f5; /* Light gray side bar background color */
+      padding: 20px;
+    }
+
+    #side-bar a {
+      display: block;
+      color: #333; /* Dark gray text color for links */
+      text-decoration: none;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      background-color: #ddd; /* Lighter gray for side bar links */
+    }
+
+    #main-content {
+      width: 60%;
+      padding: 20px;
+    }
+
+    #right-section {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: #f5f5f5; /* Light gray background color for right section */
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Your Navigation Bar</h1>
+  </header>
+
+  <div id="top-bar">
+    <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a>
+    <a href="#">Link 4</a>
+  </div>
+
+  <div id="main-container">
+    <div id="side-bar">
+      <a href="#">Side Link 1</a>
+      <a href="#">Side Link 2</a>
+      <a href="#">Side Link 3</a>
+      <a href="#">Side Link 4</a>
+      <a href="#">Side Link 5</a>
+    </div>
+
+    <div id="main-content">
+      <!-- Your filter form goes here -->
+      <h1>City Filter</h1>
+      <form id="cityFilterForm">
+        <!-- ... (your form elements) -->
+        <button type="button" onclick="filterCities()">Filter Cities</button>
+      </form>
+
+      <div id="resultContainer"></div>
+    </div>
+
+    <div id="right-section">
+      <!-- Content for the right section goes here -->
+    </div>
+  </div>
+
+</body>
+</html>
+

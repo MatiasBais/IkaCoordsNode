@@ -1,0 +1,128 @@
+<div class="alianza-info">
+    <h2>Alianza</h2>
+    <table id="alianza-table">
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Nombre</th>
+            <td class="data-cell"><%= alianza.nombre %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Totales</th>
+            <td class="data-cell"> <% 
+                let suma = alianza.players.reduce((total, player) => {
+                    if (player.puntos && player.puntos.length > 0) {
+                        total += player.puntos[0].Totales;
+                    }
+                    return total;
+                }, 0);
+                %>
+                <%= suma.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Maestro Constructor</th>
+            <td class="data-cell"><% 
+                let suma2 = alianza.players.reduce((total, player) => {
+                    if (player.puntos && player.puntos.length > 0) {
+                        total += player.puntos[0].Constructor;
+                    }
+                    return total;
+                }, 0);
+                %>
+                <%= suma2.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Investigadores</th>
+            <td class="data-cell"><% 
+                let suma3 = alianza.players.reduce((total, player) => {
+                    if (player.puntos && player.puntos.length > 0) {
+                        total += player.puntos[0].Investigadores;
+                    }
+                    return total;
+                }, 0);
+                %>
+                <%= suma3.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Generales</th>
+            <td class="data-cell"><% 
+                let suma4 = alianza.players.reduce((total, player) => {
+                    if (player.puntos && player.puntos.length > 0) {
+                        total += player.puntos[0].Generales;
+                    }
+                    return total;
+                }, 0);
+                %>
+                <%= suma4.toLocaleString("en-US") %></td>
+        </tr>
+        <tr>
+            <th class="header-cell" style="background-color: #444; color: white;">Oro</th>
+            <td class="data-cell"><% 
+                let suma5 = alianza.players.reduce((total, player) => {
+                    if (player.puntos && player.puntos.length > 0) {
+                        total += player.puntos[0].Oro;
+                    }
+                    return total;
+                }, 0);
+                %>
+                <%= suma5.toLocaleString("en-US") %></td>
+        </tr>
+    </table>
+</div>
+
+
+
+<div class="player-info">
+    <h2>Jugadores</h2>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Totales</th>
+            <th>Maestro Constructor</th>
+            <th>Investigadores</th>
+            <th>Generales</th>
+            <th>Oro</th>
+        </tr>
+        <% alianza.players.forEach(player => { %>
+        <tr>
+            <td><a href="/player/<%=player.server %>/<%=player.idplayer%>"><%= player.nombre %></a></td>
+            <td><%= player.puntos[0].Totales.toLocaleString("en-US") %></td>
+            <td><%= player.puntos[0].Constructor.toLocaleString("en-US") %></td>
+            <td><%= player.puntos[0].Investigadores.toLocaleString("en-US") %></td>
+            <td><%= player.puntos[0].Generales.toLocaleString("en-US") %></td>
+            <td><%= player.puntos[0].Oro.toLocaleString("en-US") %></td>
+        </tr>
+        <% }); %>
+    </table>
+</div>
+
+
+
+<script>
+    window.onload = function() {
+        // Get all header cells
+        const headerCells = document.querySelectorAll('.header-cell');
+
+        // Loop through each header cell
+        headerCells.forEach(headerCell => {
+            // Get the column index of the current header cell
+            const columnIndex = headerCell.cellIndex;
+
+            // Get all data cells in the same column
+            const dataCells = document.querySelectorAll(`#alianza-table td:nth-child(${columnIndex + 1})`);
+
+            // Find the maximum width among all cells in the column
+            let maxWidth = 0;
+            dataCells.forEach(dataCell => {
+                const cellWidth = dataCell.offsetWidth;
+                if (cellWidth > maxWidth) {
+                    maxWidth = cellWidth;
+                }
+            });
+
+            // Set the width of all cells in the column to the maximum width
+            headerCell.style.width = `${maxWidth}px`;
+            dataCells.forEach(dataCell => {
+                dataCell.style.width = `${maxWidth}px`;
+            });
+        });
+    };
+</script>

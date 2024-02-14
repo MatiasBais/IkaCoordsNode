@@ -1,0 +1,86 @@
+<h1>Buscar Jugador</h1>
+  <form id="playerFilterForm">
+    <label for="playerName">Jugador:</label>
+    <input type="text" id="playerName">
+    
+    <label for="allianceName">Alianza:</label>
+    <input type="text" id="allianceName">
+    
+    <label for="minPoints">Puntos:</label>
+    <input type="number" id="minPoints" placeholder="Mínimo">
+    <input type="number" id="maxPoints" placeholder="Mínimo">
+
+    <button type="button" onclick="filterPlayers()">Buscar Jugadores</button>
+  </form>
+
+  <div id="playerResultContainer"></div>
+
+  <script>
+    async function filterPlayers() {
+      const playerName = document.getElementById('playerName').value;
+      const allianceName = document.getElementById('allianceName').value;
+      const minPoints = document.getElementById('minPoints').value;
+      const maxPoints = document.getElementById('maxPoints').value;
+      const server = document.getElementById('server').value;
+
+      const apiUrl = '/api/filter-players';
+      const queryParams = new URLSearchParams({
+        playerName: playerName,
+        allianceName: allianceName,
+        minPoints: minPoints,
+        maxPoints: maxPoints,
+        server:server
+      });
+
+      const url = `${apiUrl}?${queryParams.toString()}`;
+
+      try {
+        const response = await fetch(url);
+        const players = await response.json();
+
+        // Display the filtered players
+        displayPlayers(players);
+      } catch (error) {
+        console.error('Error fetching filtered players:', error);
+      }
+    }
+
+    function displayPlayers(players) {
+      const resultContainer = document.getElementById('playerResultContainer');
+      resultContainer.innerHTML = '';
+
+      if (players.length === 0) {
+        resultContainer.innerHTML = '<p>No players found.</p>';
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Jugador</th>
+          <th>Alianza</th>
+          <th>Puntos Totales</th>
+          <th>Maestro Constructor</th>
+          <th>Investigadores</th>
+          <th>Generales</th>
+          <th>Oro</th>
+        </tr>
+      `;
+
+      players.forEach(player => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td><a href="/player/${player.server}/${player.idplayer}">${player.nombre}</a></td>
+        <td><a href="/alianza/${player.alianza.server}/${player.alianza.idalianza}">${player.alianza ? player.alianza.nombre : '-'}</a></td>
+          <td>${player.puntos ? (player.puntos[0].Totales).toLocaleString("en-US") : "No disponible"}</td>
+          <td>${player.puntos ? (player.puntos[0].Constructor).toLocaleString("en-US"):"No disponible"}</td>
+          <td>${player.puntos ? (player.puntos[0].Generales).toLocaleString("en-US"):"No disponible"}</td>
+          <td>${player.puntos ? (player.puntos[0].Investigadores).toLocaleString("en-US"):"No disponible"}</td>
+          <td>${player.puntos ? (player.puntos[0].Oro).toLocaleString("en-US"):"No disponible"}</td>
+          `;
+        table.appendChild(row);
+      });
+
+      resultContainer.appendChild(table);
+    }
+  </script>
