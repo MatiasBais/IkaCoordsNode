@@ -18,9 +18,11 @@ app.set('view engine', 'ejs');
 // Serve static files (styles.css)
 app.use(express.static(path.join(__dirname, '')));
 // Routes
-app.get('/', (req, res) => {
-  res.render('layout', { title: 'Your Page Title', body: 'Your filter form goes here' });
+app.get('/', (req,res)=>{
+  res.render('layout',{title:"IkaCoords",sidebar:'partials/sidebars/searchSideBar.ejs', formPartial: 'partials/search.ejs' })
 });
+
+
 
 
 //searchs
